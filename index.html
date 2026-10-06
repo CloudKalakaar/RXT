@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>RXT Productions</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="RXT Prod">
+  <meta name="description" content="RXT Productions - High-End Photography & Cinema Studio Management">
+  <link rel="manifest" href="./manifest.webmanifest">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+
+  <!-- Google Identity Services (GIS) for Google Drive Continuous Cloud Backup -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <!-- Local jsPDF & AutoTable for Offline PDF Invoicing -->
+  <script src="./lib/jspdf.umd.min.js"></script>
+  <script src="./lib/jspdf.plugin.autotable.min.js"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+  <div id="app-viewport">
+    
+    <!-- Top HUD Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="header-logo-badge">
+          <img src="./assets/logo.svg" alt="RXT" onerror="this.src='./assets/favicon.svg'">
+        </div>
+        <div class="brand-text">
+          <div class="brand-title-row">
+            <span class="brand-title">RXT PRODUCTIONS</span>
+            <span class="brand-pill-badge">STUDIO OS</span>
+          </div>
+          <span class="brand-sub">CINEMA &bull; STILLS &bull; CLIENT CRM</span>
+        </div>
+      </div>
+
+      <!-- Desktop Horizontal Navigation (Visible on Desktop / Tablets) -->
+      <nav class="desktop-nav-tabs">
+        <button class="nav-tab-btn active" data-tab="tab-dashboard">
+          <span class="nav-tab-icon">📅</span>
+          <span class="nav-tab-label">SCHEDULE</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-clients">
+          <span class="nav-tab-icon">👥</span>
+          <span class="nav-tab-label">CLIENTS</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-admin">
+          <span class="nav-tab-icon">⚙️</span>
+          <span class="nav-tab-label">STUDIO OS</span>
+        </button>
+      </nav>
+
+      <div class="header-telemetry">
+        <div class="rec-badge">
+          <div class="rec-dot"></div>
+          <span>REC</span>
+        </div>
+        <button id="header-sync-status" class="sync-status-icon" title="Google Drive Cloud Sync" aria-label="Cloud Sync">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M19 16.9A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/>
+            <polyline points="16 16 12 12 8 16"/>
+            <line x1="12" y1="12" x2="12" y2="21"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sleek Cinema Camera Telemetry HUD Strip -->
+    <div class="camera-hud-bar">
+      <div class="hud-item"><span class="hud-tag">RES</span><span class="hud-val">4K RAW</span></div>
+      <div class="hud-item"><span class="hud-tag">FPS</span><span class="hud-val">24.00</span></div>
+      <div class="hud-item"><span class="hud-tag">SHTR</span><span class="hud-val">1/250</span></div>
+      <div class="hud-item"><span class="hud-tag">ISO</span><span class="hud-val">800</span></div>
+      <div class="hud-item"><span class="hud-tag">LENS</span><span class="hud-val">50mm F/1.4</span></div>
+      <div class="hud-item"><span class="hud-tag">BATT</span><span class="hud-val" style="color:var(--success-green);">98% ⚡</span></div>
+    </div>
+
+    <!-- Main Content Tab Views -->
+    <main class="main-content" id="main-content">
+      
+      <!-- TAB 1: DASHBOARD (Calendar & Bookings) -->
+      <section id="tab-dashboard" class="tab-pane active">
+        <div class="dashboard-horizontal-grid">
+          
+          <!-- Left Column (Calendar & Metrics) -->
+          <div class="dashboard-left-col">
+            <!-- Monthly Stats Counter Cards -->
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="stat-top-decor"></div>
+                <div class="stat-value" id="stat-booked-count">0</div>
+                <div class="stat-label">Confirmed Shoots</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-top-decor"></div>
+                <div class="stat-value" id="stat-tentative-count" style="color:#f59e0b;">0</div>
+                <div class="stat-label">Tentative Leads</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-top-decor"></div>
+                <div class="stat-value" id="stat-free-count">0</div>
+                <div class="stat-label">Available Days</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-top-decor"></div>
+                <div class="stat-value" id="stat-pipeline-amount">&#8377;0</div>
+                <div class="stat-label">Month Pipeline</div>
+              </div>
+            </div>
+
+            <!-- Interactive Production Calendar Card -->
+            <div class="vf-card calendar-card">
+              <div class="calendar-header">
+                <button class="cal-nav-btn" id="cal-prev-btn" aria-label="Previous Month">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </button>
+
+                <div class="calendar-title-wrap">
+                  <div class="calendar-month-title" id="cal-month-title">OCTOBER 2026</div>
+                  <span class="calendar-sub-jump" id="cal-today-jump">Jump to Today</span>
+                </div>
+
+                <button class="cal-nav-btn" id="cal-next-btn" aria-label="Next Month">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Days of Week -->
+              <div class="calendar-weekdays">
+                <div class="cal-weekday">SUN</div>
+                <div class="cal-weekday">MON</div>
+                <div class="cal-weekday">TUE</div>
+                <div class="cal-weekday">WED</div>
+                <div class="cal-weekday">THU</div>
+                <div class="cal-weekday">FRI</div>
+                <div class="cal-weekday">SAT</div>
+              </div>
+
+              <!-- Calendar Days Grid -->
+              <div class="calendar-grid" id="calendar-days-grid">
+                <!-- Dynamically populated by app.js -->
+              </div>
+
+              <!-- Legend -->
+              <div class="calendar-legend">
+                <div class="legend-item">
+                  <div class="legend-dot-booked"></div>
+                  <span>Confirmed Date</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot-tentative"></div>
+                  <span>Tentative Hold</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot-free"></div>
+                  <span>Available Date</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (Day Selection Detail Panel) -->
+          <div class="dashboard-right-col">
+            <div class="vf-card day-detail-panel" id="day-detail-panel">
+              <div class="day-detail-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <span class="vf-bracket-left">[</span>
+                  <span class="day-detail-date" id="selected-day-label">SELECT A DATE</span>
+                  <span class="vf-bracket-right">]</span>
+                </div>
+                <span class="day-badge-status is-free" id="selected-day-status">AVAILABLE</span>
+              </div>
+
+              <div id="day-events-container">
+                <p style="font-size:0.8rem; color:var(--text-muted);">Tap any date on the calendar to inspect bookings or add a client.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- TAB 2: CLIENTS (CRM, Requirements & Dynamic Invoicing) -->
+      <section id="tab-clients" class="tab-pane">
+        <div class="search-filter-bar">
+          <div class="search-input-wrap">
+            <input type="text" id="client-search-input" class="pixel-input" placeholder="Search client, phone or date...">
+          </div>
+          <button class="btn btn-primary" id="btn-open-add-client">
+            <span>+ ADD CLIENT</span>
+          </button>
+        </div>
+
+        <!-- Quick Client Management Bar (Clear Sample Clients / Counter) -->
+        <div class="clients-toolbar-strip" id="clients-toolbar-strip">
+          <div class="clients-count-badge" id="clients-total-counter">
+            <span class="counter-dot"></span>
+            <span id="clients-count-text">0 Clients</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-ghost-sm" id="btn-clear-sample-clients" title="Clear Sample / All Clients">
+              🗑️ Clear Clients
+            </button>
+            <button class="btn-ghost-sm" id="btn-load-demo-clients" title="Load Sample Clients for Testing" style="display:none;">
+              🔄 Load Demo
+            </button>
+          </div>
+        </div>
+
+        <!-- Clients List (Responsive Multi-Column on Desktop) -->
+        <div class="clients-list" id="clients-list-container">
+          <!-- Populated by app.js -->
+        </div>
+      </section>
+
+      <!-- TAB 3: ADMIN (Catalogue & Google Drive Cloud Sync) -->
+      <section id="tab-admin" class="tab-pane">
+        <div class="admin-horizontal-grid">
+          
+          <!-- Left Column (Catalogue Management) -->
+          <div class="admin-left-col">
+            <div class="admin-section">
+              <div class="section-header">
+                <div class="section-title">SERVICE CATALOGUES &amp; RATES</div>
+                <button class="btn btn-secondary btn-icon-sm" id="btn-open-add-catalogue" title="Add Service" style="font-size:1.1rem;">+</button>
+              </div>
+
+              <div class="catalogue-cards-list" id="catalogue-items-container">
+                <!-- Populated by app.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (Cloud Sync & Slate Controls) -->
+          <div class="admin-right-col">
+            <!-- Google Drive Cloud Sync Section -->
+            <div class="admin-section">
+              <div class="section-header">
+                <div class="section-title">CLOUD SYNC &amp; STORAGE</div>
+              </div>
+
+              <div class="gdrive-sync-panel vf-card">
+                <div class="gdrive-top-row">
+                  <div class="gdrive-brand">
+                    <svg class="gdrive-icon-svg" viewBox="0 0 24 24" fill="none">
+                      <path d="M4.5 16.5L8.5 9.5H19.5L15.5 16.5H4.5Z" fill="#F4B400"/>
+                      <path d="M15.5 16.5L19.5 9.5L23.5 16.5L19.5 23.5L15.5 16.5Z" fill="#0F9D58"/>
+                      <path d="M8.5 9.5L4.5 16.5L0.5 9.5L4.5 2.5L8.5 9.5Z" fill="#4285F4"/>
+                    </svg>
+                    <div class="gdrive-title">Google Drive Sync</div>
+                  </div>
+                  <span class="gdrive-badge disconnected" id="gdrive-status-badge">Disconnected</span>
+                </div>
+
+                <div class="gdrive-account-text">
+                  Account: <strong id="gdrive-account-email" style="color:#ffffff;">Not Connected</strong>
+                </div>
+                <div class="gdrive-sync-time">
+                  Last Backup: <span id="gdrive-last-sync-time" style="color:var(--gold-primary);">Never</span>
+                </div>
+
+                <div class="gdrive-toggle-row">
+                  <span class="toggle-label">Automatic Cloud Backup</span>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="gdrive-auto-sync-toggle" checked>
+                    <span class="toggle-slider"></span>
+                  </label>
+                </div>
+
+                <div class="gdrive-actions-flex" style="margin-bottom: 10px;">
+                  <button class="btn btn-primary" id="btn-gdrive-connect" style="flex:1;">
+                    <span>CONNECT DRIVE</span>
+                  </button>
+                  <button class="btn btn-danger" id="btn-gdrive-disconnect" style="display:none; flex:1;">
+                    <span>SIGN OUT</span>
+                  </button>
+                </div>
+
+                <div class="gdrive-actions-flex" id="gdrive-cloud-ops-row" style="display:none;">
+                  <button class="btn btn-secondary" id="btn-gdrive-backup-now" style="flex:1;">
+                    <span>☁️ BACKUP NOW</span>
+                  </button>
+                  <button class="btn btn-secondary" id="btn-gdrive-restore-now" style="flex:1;">
+                    <span>🔄 RESTORE NOW</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Database Slate Management (Clear or Reset Clients) -->
+            <div class="admin-section">
+              <div class="section-header">
+                <div class="section-title">CLIENT DATA SLATE</div>
+              </div>
+              <div class="vf-card" style="padding:14px;">
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">
+                  Manage your client records. You can wipe all sample clients to start with a clean slate, or reload demo clients for demonstration.
+                </p>
+                <div style="display:flex; gap:8px;">
+                  <button class="btn btn-danger" id="btn-admin-clear-clients" style="flex:1; font-size:0.68rem;">
+                    <span>🗑️ WIPE ALL CLIENTS</span>
+                  </button>
+                  <button class="btn btn-secondary" id="btn-admin-load-demo" style="flex:1; font-size:0.68rem;">
+                    <span>🔄 LOAD DEMO DATA</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Offline File Backup / Restore -->
+            <div class="admin-section">
+              <div class="section-header">
+                <div class="section-title">LOCAL FILE BACKUP</div>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-secondary" id="btn-export-json" style="flex:1;">
+                  <span>EXPORT JSON</span>
+                </button>
+                <button class="btn btn-secondary" id="btn-import-json-trigger" style="flex:1;">
+                  <span>IMPORT JSON</span>
+                </button>
+                <input type="file" id="import-json-file-input" accept=".json" style="display:none;">
+              </div>
+            </div>
+
+            <!-- PWA Cache Refresh & Info -->
+            <div class="admin-section">
+              <div class="section-header">
+                <div class="section-title">APP CACHE &amp; SYSTEM</div>
+              </div>
+              <div class="cache-refresh-panel vf-card">
+                <div>
+                  <div style="font-family:var(--font-pixel-heading); font-size:0.78rem; color:#ffffff;">RXT Prod v1.0.7</div>
+                  <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">Clear cached files &amp; load latest version</div>
+                </div>
+                <button class="btn btn-secondary" id="btn-cache-refresh">
+                  <span>REFRESH CACHE</span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Floating Glass Bottom Navigation Dock (Visible on Mobile) -->
+    <div class="bottom-nav-wrapper">
+      <nav class="bottom-nav">
+        <button class="nav-tab-btn active" data-tab="tab-dashboard">
+          <span class="nav-tab-icon">📅</span>
+          <span class="nav-tab-label">SCHEDULE</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-clients">
+          <span class="nav-tab-icon">👥</span>
+          <span class="nav-tab-label">CLIENTS</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="tab-admin">
+          <span class="nav-tab-icon">⚙️</span>
+          <span class="nav-tab-label">STUDIO OS</span>
+        </button>
+      </nav>
+    </div>
+
+  </div>
+
+  <!-- =========================================================================
+       MODAL 1: ADD / EDIT CLIENT
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-client">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-client-title">ADD CLIENT</span>
+        <button class="modal-close-btn" data-close="modal-client">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="client-form">
+          <input type="hidden" id="client-id-field">
+
+          <div class="form-group">
+            <label class="form-label" for="client-name">Client Name *</label>
+            <input type="text" id="client-name" class="pixel-input" placeholder="e.g. Rahul & Sneha" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="client-phone">Phone Number *</label>
+              <input type="tel" id="client-phone" class="pixel-input" placeholder="10 digit number" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="client-date">Event Date *</label>
+              <input type="date" id="client-date" class="pixel-input" required>
+            </div>
+          </div>
+
+          <!-- Booking Status Selection (Tentative vs Confirmed) -->
+          <div class="form-group">
+            <label class="form-label">Booking Status *</label>
+            <div class="status-radio-group">
+              <label class="status-radio-btn tentative-option" id="label-status-tentative">
+                <input type="radio" name="client-status" id="client-status-tentative" value="tentative" checked>
+                <span>⏳ Tentative (Inquiry / Hold)</span>
+              </label>
+              <label class="status-radio-btn confirmed-option" id="label-status-confirmed">
+                <input type="radio" name="client-status" id="client-status-confirmed" value="confirmed">
+                <span>🎬 Confirmed (Booked Shoot)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="client-address">Shoot Venue / Address</label>
+            <input type="text" id="client-address" class="pixel-input" placeholder="e.g. Palace Grounds, Bangalore">
+          </div>
+
+          <!-- Requirements Selection From Catalogue -->
+          <div class="form-group">
+            <label class="form-label">Shoot Requirements (Select from Catalogue)</label>
+            <div class="req-selection-box" id="modal-req-selection-list">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- Live Discount & Calculations -->
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="client-discount">Discount (% on total)</label>
+              <input type="number" id="client-discount" class="pixel-input" min="0" max="100" value="0" step="1">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="client-advance">Advance Paid (&#8377;)</label>
+              <input type="number" id="client-advance" class="pixel-input" min="0" value="0" step="500">
+            </div>
+          </div>
+
+          <!-- Live Calc Summary -->
+          <div class="invoice-calc-box">
+            <div class="calc-row">
+              <span>Subtotal:</span>
+              <span id="modal-calc-subtotal">&#8377;0</span>
+            </div>
+            <div class="calc-row" style="color:#34d399;">
+              <span>Discount Amount:</span>
+              <span id="modal-calc-discount">- &#8377;0</span>
+            </div>
+            <div class="calc-row grand-total">
+              <span>GRAND TOTAL:</span>
+              <span id="modal-calc-grand-total">&#8377;0</span>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:12px;">
+            <label class="form-label" for="client-notes">Notes / Shoot Specifications</label>
+            <textarea id="client-notes" class="pixel-input" style="height:60px; resize:none;" placeholder="Timings, specific camera gears, or album specs..."></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close="modal-client" style="flex:1;">CANCEL</button>
+        <button type="button" class="btn btn-primary" id="btn-save-client" style="flex:2;">SAVE CLIENT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: LIVE DYNAMIC INVOICE & QUOTATION SHEET
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-invoice">
+    <div class="modal-sheet" style="max-height: 94vh;">
+      <div class="modal-header">
+        <span class="modal-title">BILL</span>
+        <button class="modal-close-btn" data-close="modal-invoice">&times;</button>
+      </div>
+
+      <!-- Quick Edit Controls Bar for Requirements & Discount -->
+      <div style="background:var(--bg-surface-2); padding:10px 16px; border-bottom:1px solid var(--border-subtle); display:flex; align-items:center; justify-content:space-between; gap:10px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted);">DISCOUNT %:</span>
+          <input type="number" id="invoice-quick-discount" min="0" max="100" style="width:65px; height:32px; background:#000; border:1px solid var(--border-gold); color:#fff; text-align:center; font-family:var(--font-mono); border-radius:4px;">
+        </div>
+        <button class="btn btn-secondary" id="btn-invoice-edit-reqs" style="height:32px; font-size:0.65rem;">
+          EDIT REQUIREMENTS
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding:12px;">
+        <!-- Container for Live Rendered Invoice -->
+        <div id="invoice-preview-container">
+          <!-- Populated by invoice.js -->
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-secondary" id="btn-download-pdf" style="flex:1;">
+          <span>📥 DOWNLOAD PDF</span>
+        </button>
+        <button type="button" class="btn btn-whatsapp" id="btn-share-whatsapp" style="flex:1;">
+          <span>💬 SHARE WHATSAPP</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 3: ADD / EDIT CATALOGUE ITEM
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-catalogue">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <span class="modal-title" id="modal-catalogue-title">ADD SERVICE</span>
+        <button class="modal-close-btn" data-close="modal-catalogue">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="catalogue-form">
+          <input type="hidden" id="cat-id-field">
+
+          <div class="form-group">
+            <label class="form-label" for="cat-name">Service / Package Name *</label>
+            <input type="text" id="cat-name" class="pixel-input" placeholder="e.g. Candid Photography Only" required>
+          </div>
+
+          <div class="form-row-2">
+            <div class="form-group">
+              <label class="form-label" for="cat-category">Category *</label>
+              <select id="cat-category" class="pixel-input">
+                <option value="Traditional">Traditional</option>
+                <option value="Candid">Candid</option>
+                <option value="Cinematic">Cinematic</option>
+                <option value="Printing">Printing / Album</option>
+                <option value="Aerial">Drone / Aerial</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="cat-price">Price (&#8377;) *</label>
+              <input type="number" id="cat-price" class="pixel-input" min="0" step="500" placeholder="25000" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="cat-desc">Package Description</label>
+            <textarea id="cat-desc" class="pixel-input" style="height:65px; resize:none;" placeholder="Deliverables, number of photographers, resolutions..."></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close="modal-catalogue" style="flex:1;">CANCEL</button>
+        <button type="button" class="btn btn-primary" id="btn-save-catalogue" style="flex:2;">SAVE SERVICE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 4: LUXURY WEDDING QUOTATION PRESENTATION DECK (16 SLIDES)
+       ========================================================================= -->
+  <div class="modal-overlay" id="modal-quotation">
+    <div class="modal-sheet quotation-sheet" style="max-height: 96vh;">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="modal-title">WEDDING QUOTATION DECK</span>
+          <span class="brand-pill-badge">16 SLIDES</span>
+        </div>
+        <button class="modal-close-btn" data-close="modal-quotation">&times;</button>
+      </div>
+
+      <!-- Quotation Top Toolbar: Quick Discount & Jump Controls -->
+      <div class="quotation-toolbar-strip">
+        <div class="quotation-discount-box">
+          <span style="font-family:var(--font-mono); font-size:0.7rem; color:var(--text-muted);">DISCOUNT %:</span>
+          <input type="number" id="quotation-quick-discount" min="0" max="100" style="width:65px; height:32px; background:#000; border:1px solid var(--border-gold); color:#fff; text-align:center; font-family:var(--font-mono); border-radius:4px;">
+        </div>
+
+        <!-- Quick Slide Navigation -->
+        <div class="quotation-nav-controls">
+          <button class="btn btn-secondary btn-icon-sm" id="btn-quote-prev" style="width:34px; height:34px;">◀</button>
+          <span id="quotation-slide-indicator" style="font-family:var(--font-mono); font-size:0.75rem; color:#ffffff; min-width:85px; text-align:center;">Slide 1 / 16</span>
+          <button class="btn btn-secondary btn-icon-sm" id="btn-quote-next" style="width:34px; height:34px;">▶</button>
+        </div>
+
+        <!-- Key Slide Jump Shortcuts -->
+        <div class="quotation-jump-pills">
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="1">Cover</button>
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="4">Details</button>
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="6">Flow</button>
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="7">Schedule</button>
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="9">Deliverables</button>
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="10">Pricing</button>
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="13">Terms</button>
+          <button class="btn-ghost-sm quote-jump-btn" data-slide="15">Contact</button>
+        </div>
+      </div>
+
+      <!-- 16:9 Canvas Slide Viewer -->
+      <div class="modal-body quotation-viewer-body">
+        <div class="quotation-canvas-wrapper">
+          <canvas id="quotation-slide-canvas"></canvas>
+        </div>
+        <div style="text-align:center; margin-top:8px; font-size:0.7rem; color:var(--text-muted); font-family:var(--font-mono);">
+          <span id="quotation-slide-title">RXT PRODUCTIONS COVER SLIDE</span>
+        </div>
+      </div>
+
+      <div class="modal-footer" style="display:flex; gap:8px;">
+        <button type="button" class="btn btn-primary" id="btn-download-quotation-pdf" style="flex:1;">
+          <span>📥 DOWNLOAD QUOTATION PDF (16 SLIDES)</span>
+        </button>
+        <button type="button" class="btn btn-whatsapp" id="btn-share-quotation-whatsapp" style="flex:1;">
+          <span>💬 SHARE ON WHATSAPP</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Application Logic Modules -->
+  <script src="./js/catalogue.js"></script>
+  <script src="./js/invoice.js"></script>
+  <script src="./js/quotation-slides-data.js"></script>
+  <script src="./js/quotation.js"></script>
+  <script src="./js/gdrive.js"></script>
+  <script src="./js/app.js"></script>
+</body>
+</html>

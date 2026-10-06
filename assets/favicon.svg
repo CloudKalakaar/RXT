@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="12" fill="#000000" />
+  <circle cx="32" cy="32" r="26" fill="#09090b" stroke="#f5c518" stroke-width="2.5" />
+  <!-- Aperture Blades -->
+  <g stroke="#f5c518" stroke-width="1.5" fill="#18181b">
+    <path d="M 32 10 L 45 20 L 38 29 Z" />
+    <path d="M 49 19 L 51 34 L 40 33 Z" />
+    <path d="M 51 36 L 41 49 L 35 39 Z" />
+    <path d="M 32 54 L 19 44 L 26 35 Z" />
+    <path d="M 15 45 L 13 30 L 24 31 Z" />
+    <path d="M 13 28 L 23 15 L 29 25 Z" />
+  </g>
+  <polygon points="32,27 36,29 36,35 32,37 28,35 28,29" fill="#000000" stroke="#f5c518" stroke-width="1.5" />
+  <circle cx="32" cy="32" r="2" fill="#ef4444" />
+</svg>

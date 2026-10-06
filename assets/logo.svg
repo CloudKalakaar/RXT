@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Dark Radial Gradients -->
+    <radialGradient id="lensGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#1c2333" />
+      <stop offset="45%" stop-color="#0b0f17" />
+      <stop offset="85%" stop-color="#05070a" />
+      <stop offset="100%" stop-color="#000000" />
+    </radialGradient>
+    
+    <radialGradient id="irisCenter" cx="45%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#f5c518" stop-opacity="0.3" />
+      <stop offset="40%" stop-color="#06b6d4" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.9" />
+    </radialGradient>
+
+    <!-- Metallic Gold Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe270" />
+      <stop offset="50%" stop-color="#f5c518" />
+      <stop offset="100%" stop-color="#b8860b" />
+    </linearGradient>
+
+    <!-- Chrome Edge Gradient -->
+    <linearGradient id="metalRing" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#444444" />
+      <stop offset="25%" stop-color="#888888" />
+      <stop offset="50%" stop-color="#222222" />
+      <stop offset="75%" stop-color="#666666" />
+      <stop offset="100%" stop-color="#1a1a1a" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Black Background -->
+  <rect width="512" height="512" rx="64" fill="#000000" />
+  <rect width="504" height="504" x="4" y="4" rx="60" fill="none" stroke="#18181b" stroke-width="2" />
+
+  <!-- Camera Viewfinder HUD Corners -->
+  <path d="M 40 70 L 40 40 L 70 40" fill="none" stroke="#f5c518" stroke-width="4" stroke-linecap="square" />
+  <path d="M 472 70 L 472 40 L 442 40" fill="none" stroke="#f5c518" stroke-width="4" stroke-linecap="square" />
+  <path d="M 40 442 L 40 472 L 70 472" fill="none" stroke="#f5c518" stroke-width="4" stroke-linecap="square" />
+  <path d="M 472 442 L 472 472 L 442 472" fill="none" stroke="#f5c518" stroke-width="4" stroke-linecap="square" />
+
+  <!-- Recording Tally Dot & HUD Info -->
+  <circle cx="65" cy="65" r="7" fill="#ef4444">
+    <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+  </circle>
+  <text x="82" y="70" font-family="'Courier New', monospace" font-size="12" font-weight="900" fill="#ef4444" letter-spacing="2">REC</text>
+  <text x="445" y="70" text-anchor="end" font-family="'Courier New', monospace" font-size="11" font-weight="700" fill="#a1a1aa" letter-spacing="1">4K RAW 24FPS</text>
+
+  <!-- Outer Camera Lens Ring -->
+  <circle cx="256" cy="226" r="148" fill="none" stroke="url(#metalRing)" stroke-width="12" />
+  <circle cx="256" cy="226" r="140" fill="none" stroke="#09090b" stroke-width="4" />
+  <circle cx="256" cy="226" r="136" fill="url(#lensGlow)" stroke="#f5c518" stroke-width="2" stroke-dasharray="8 6" />
+
+  <!-- Lens Element Glass Inner -->
+  <circle cx="256" cy="226" r="108" fill="url(#irisCenter)" stroke="#27272a" stroke-width="3" />
+
+  <!-- 6 Aperture Blades (Camera Shutter) -->
+  <g stroke="#f5c518" stroke-width="2.5" fill="#09090b" fill-opacity="0.95">
+    <!-- Blade 1 -->
+    <path d="M 256 122 L 328 178 L 290 226 Z" />
+    <!-- Blade 2 -->
+    <path d="M 346 174 L 346 266 L 285 245 Z" />
+    <!-- Blade 3 -->
+    <path d="M 346 278 L 274 330 L 251 268 Z" />
+    <!-- Blade 4 -->
+    <path d="M 256 330 L 184 274 L 222 226 Z" />
+    <!-- Blade 5 -->
+    <path d="M 166 278 L 166 186 L 227 207 Z" />
+    <!-- Blade 6 -->
+    <path d="M 166 174 L 238 122 L 261 184 Z" />
+  </g>
+
+  <!-- Center Aperture Opening / Shutter Eye -->
+  <polygon points="256,198 280,212 280,240 256,254 232,240 232,212" fill="#000000" stroke="#f5c518" stroke-width="3" />
+  
+  <!-- Lens Flare Reflection -->
+  <path d="M 210 180 Q 235 160 270 166" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round" opacity="0.65" />
+  <circle cx="280" cy="172" r="3" fill="#ffffff" opacity="0.8" />
+  <circle cx="240" cy="265" r="4" fill="#06b6d4" opacity="0.6" />
+
+  <!-- Viewfinder Center Crosshair -->
+  <line x1="256" y1="216" x2="256" y2="236" stroke="#f5c518" stroke-width="1.5" opacity="0.75" />
+  <line x1="246" y1="226" x2="266" y2="226" stroke="#f5c518" stroke-width="1.5" opacity="0.75" />
+
+  <!-- Pixel Typography: RXT -->
+  <g transform="translate(0, 370)">
+    <!-- Main RXT Brand Text -->
+    <text x="256" y="44" text-anchor="middle" font-family="'Silkscreen', 'Press Start 2P', monospace, sans-serif" font-size="46" font-weight="900" fill="url(#goldGrad)" letter-spacing="8">RXT</text>
+    
+    <!-- Subtitle PRODUCTIONS -->
+    <text x="256" y="78" text-anchor="middle" font-family="'Silkscreen', 'Courier New', monospace" font-size="16" font-weight="700" fill="#e4e4e7" letter-spacing="9">PRODUCTIONS</text>
+
+    <!-- Photography Tagline -->
+    <text x="256" y="100" text-anchor="middle" font-family="'Courier New', monospace" font-size="10" font-weight="600" fill="#a1a1aa" letter-spacing="5">PHOTOGRAPHY &bull; CINEMA &bull; EVENTS</text>
+  </g>
+</svg>
